@@ -370,7 +370,8 @@ function checkIfBlank(targetPosition)
     return checkIf(targetPosition, 0);
 }
 
-function checkIf(targetPosition, check) {
+function checkIf(targetPosition, check)
+{
 
     var ifOutside = checkIfOutside(targetPosition);
 
@@ -514,16 +515,17 @@ function replySimpleMessage(replyToken, message)
 // To reply message
 function replyMessage(replyToken, messageList)
 {
+    var payloadJSON = JSON.stringify({
+        replyToken: replyToken,
+        messages: messageList
+    });
 
     UrlFetchApp.fetch(
 		configLine.API.Reply,
 		{
 			headers: LINE_HEADERS,
 			method: 'post',
-			payload: JSON.stringify({
-				replyToken: replyToken,
-				messages: messageList
-			})
+			payload: payloadJSON
 		}
     );
 }
@@ -539,4 +541,5 @@ function replyGameBoardMessage(replyToken)
 
 function doGet(e)
 {
+
 }
