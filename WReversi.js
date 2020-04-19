@@ -539,24 +539,4 @@ function replyGameBoardMessage(replyToken)
 
 function doGet(e)
 {
-
-    currentRoomIndex = getRoomIndex('Raf9fd3744e052147bb93841275fa80a5');
-    currentRoomData = getRoomData();
-
-    xSize = currentRoomData['board'].length;
-    ySize = currentRoomData['board'][0].length;
-
-    var list = [];
-
-    for (var x = 0; x < xSize; x++) {
-        for (var y = 0; y < ySize; y++) {
-            var position = {x: x, y: y};
-
-            list.push(checkIfNext(position));
-        }
-    }
-
-    var JSONString = JSON.stringify(list);
-    return ContentService.createTextOutput(JSONString)
-        .setMimeType(ContentService.MimeType.JSON);
 }
