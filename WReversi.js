@@ -9,11 +9,11 @@ var configLine = getConfig(2);
 var LINE_CHANNEL_ACCESS_TOKEN = configLine.ChannelAccessToken;
 var LINE_HEADERS = {'Content-Type': 'application/json; charset=UTF-8', 'Authorization': 'Bearer ' + LINE_CHANNEL_ACCESS_TOKEN,};
 
-var blankTemplate = JSON.parse( sheetTemplate.getRange(3, 2).getValue());
-var blackTemplate = JSON.parse( sheetTemplate.getRange(4, 2).getValue());
-var whiteTemplate = JSON.parse( sheetTemplate.getRange(5, 2).getValue());
-var roomTemplate = JSON.parse( sheetTemplate.getRange(6, 2).getValue());
-var markTemplate = JSON.parse( sheetTemplate.getRange(7, 2).getValue());
+var blankTemplate = JSON.parse(sheetTemplate.getRange(3, 2).getValue());
+var blackTemplate = JSON.parse(sheetTemplate.getRange(4, 2).getValue());
+var whiteTemplate = JSON.parse(sheetTemplate.getRange(5, 2).getValue());
+var roomTemplate = JSON.parse(sheetTemplate.getRange(6, 2).getValue());
+var markTemplate = JSON.parse(sheetTemplate.getRange(7, 2).getValue());
 var boardFlexTemplate = getBoardFlexTemplate();
 
 var currentRoomIndex;
@@ -34,10 +34,15 @@ var directList = [
     {x: 1, y: 1} //Right Down
 ];
 
+function setPositionChess(position, chess)
+{
+    currentRoomData['board'][parseInt(position.x)][parseInt(position.y)] = chess;
+}
+
 function move(position)
 {
 
-    currentRoomData['board'][position.x][position.y] = getCurrentPlayer(currentRoomIndex);
+    setPositionChess(position, getCurrentPlayer(currentRoomIndex));
 
     for (var key in directList) {
         var direct = directList[key];
@@ -86,7 +91,7 @@ function getPosition(location)
 
 function getConfig(rowIndex)
 {
-    return JSON.parse( sheetConfig.getRange(rowIndex, 2).getValue());
+    return JSON.parse(sheetConfig.getRange(rowIndex, 2).getValue());
 }
 
 function getBoardFlexTemplate()
@@ -121,13 +126,20 @@ function countCanChess()
     return count;
 }
 
+function getPositionChess(position)
+{
+    return currentRoomData['board'][parseInt(position.x)][parseInt(position.y)];
+}
+
 function countTarget(target)
 {
     var count = 0;
 
     for (var x = 0; x < xSize; x++)  {
         for (var y = 0; y < ySize; y++) {
-            count += currentRoomData['board'][parseInt(x)][parseInt(y)] === target ? 1 : 0;
+            var position = {x: x, y: y};
+
+            count += getPositionChess(position) === target ? 1 : 0;
         }
     }
 
@@ -146,7 +158,7 @@ function countWhite()
 
 function reversiPosition(position)
 {
-    currentRoomData['board'][parseInt(position.x)][parseInt(position.y)] = getCurrentPlayer();
+    setPositionChess(position, getCurrentPlayer());
 }
 
 function reversi(position, direct)
@@ -205,8 +217,9 @@ function setBoardFlex(boardFlexInput)
 
     for (var x = 0; x < xSize; x++) {
         for (var y = 0; y < ySize; y++) {
+            var position = {x: x, y: y};
 
-            var currentBlackChees = currentRoomData['board'][x][y];
+            var currentBlackChees = getPositionChess(position);
             var currentBlack = blankTemplate;
 
             var position = {x: parseInt(x), y: parseInt(y)};
@@ -365,7 +378,7 @@ function checkIf(targetPosition, check) {
         return false;
     }
 
-    var target = currentRoomData['board'][parseInt(targetPosition.x)][parseInt(targetPosition.y)];
+    var target = getPositionChess(targetPosition);
 
     return target === check;
 }
